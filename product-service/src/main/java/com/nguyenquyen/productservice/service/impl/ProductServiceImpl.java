@@ -1,7 +1,7 @@
 package com.nguyenquyen.productservice.service.impl;
 
-import com.nguyenquyen.productservice.event.ProductCreatedEvent;
-import com.nguyenquyen.productservice.event.ProductDeletedEvent;
+import com.nguyenquyen.event.ProductCreatedEvent;
+import com.nguyenquyen.event.ProductDeletedEvent;
 import com.nguyenquyen.productservice.dto.request.CreateProductRequest;
 import com.nguyenquyen.productservice.dto.request.SearchRequest;
 import com.nguyenquyen.productservice.dto.response.CreateProductResponse;

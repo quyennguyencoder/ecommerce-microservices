@@ -1,4 +1,4 @@
-package com.nguyenquyen.searchservice.event;
+package com.nguyenquyen.event;
 
 import lombok.*;
 

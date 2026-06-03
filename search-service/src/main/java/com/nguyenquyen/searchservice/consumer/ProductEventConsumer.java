@@ -1,7 +1,7 @@
 package com.nguyenquyen.searchservice.consumer;
 
-import com.nguyenquyen.searchservice.event.ProductCreatedEvent;
-import com.nguyenquyen.searchservice.event.ProductDeletedEvent;
+import com.nguyenquyen.event.ProductCreatedEvent;
+import com.nguyenquyen.event.ProductDeletedEvent;
 import com.nguyenquyen.searchservice.document.ProductDocument;
 import com.nguyenquyen.searchservice.service.ProductDocumentService;
 import lombok.RequiredArgsConstructor;
