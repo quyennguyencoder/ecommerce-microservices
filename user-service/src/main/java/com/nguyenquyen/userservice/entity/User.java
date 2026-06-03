@@ -1,0 +1,97 @@
+package com.nguyenquyen.userservice.entity;
+
+import com.nguyenquyen.userservice.common.Gender;
+import com.nguyenquyen.userservice.common.UserStatus;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    private String password;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String phone;
+
+    private String avatarUrl;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private LocalDate birthDate;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private UserStatus userStatus = UserStatus.ACTIVE;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<UserHasRole> userHasRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<Address> addresses = new HashSet<>();
+
+    public void addRole(Role role) {
+        this.userHasRoles.add(UserHasRole.builder().user(this).role(role).build());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<Role> roleList = this.userHasRoles.stream().map(UserHasRole::getRole).toList();
+        return roleList.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.userStatus == UserStatus.ACTIVE;
+    }
+}
